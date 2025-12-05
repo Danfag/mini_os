@@ -192,26 +192,43 @@ int source(char *script) {
     
     int startIndex=program_lines_current(); //program_lines_current() returns the next free line in program_lines
     
+   int* pagetable= malloc(sizeof(int)*33);
+   int currentPage=0;
     int length=0;
+    char page[3][MAX_USER_INPUT];
+    int i=0;
        
     while (1) {
   
-        memset(line, 0, sizeof(line));
+        memset(page[i], 0, sizeof(line));
 
         if (feof(p)) {
-
+            if(i==1){
+                memset(page[1], 0, sizeof(line));
+                memset(page[2], 0, sizeof(line));
+                pagetable[currentPage] = program_lines_append(page);
+                currentPage++;
+            }
+            if(i==2){
+                memset(page[2], 0, sizeof(line));
+                pagetable[currentPage] = program_lines_append(page);
+                currentPage++;
+            }
             break;
         }
-        fgets(line, MAX_USER_INPUT - 1, p);
+        fgets(page[i], MAX_USER_INPUT - 1, p);
         
         length++;
-        
-        program_lines_append(line);     
+        if (i>=2){
+            pagetable[currentPage] = program_lines_append(page);
+                currentPage++;
+        }
+        i=(i+1)%3;
 
     }
 
     fclose(p);
-    pcb_init(script_pcb,length,startIndex); // build pcb with computed length and startindex
+    pcb_init(script_pcb,length,startIndex,pagetable); // build pcb with computed length and startindex
     scheduler_enqueue(script_pcb);
     return script_pcb->pid;
  
@@ -312,7 +329,7 @@ int run(char *command[]) {
     void readShell() { // helper for background handling. Emulates source(), but reads and converts stdin instead of a script file.
     pcb *script_pcb =malloc(sizeof(pcb));
     int startIndex=program_lines_current();
-    int length=0;
+    int length =0;
         while(1){
         char userInput[MAX_USER_INPUT];
         fgets(userInput, MAX_USER_INPUT - 1, stdin);

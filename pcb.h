@@ -7,6 +7,7 @@ int length;
 int length_score;
 int currentIndex;
 struct pcb *next;
+int* pagetable;
 } pcb;
-void pcb_init(pcb *script,int length,int startIndex);
+void pcb_init(pcb *script,int length,int startIndex, int *pagetable);
 #endif
