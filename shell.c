@@ -11,8 +11,10 @@
 int parseInput(char ui[]);
  ready_queue queue; // global queue, directly managed in shell
  int recursion_depth=0; // track recursion depth for exec calls
+ int* pids;
 // Start of everything
 int main(int argc, char *argv[]) {
+    pids = malloc(sizeof(int));
     printf("Shell version 1.4 created December 2024\n");
 
     char prompt = '$'; // Shell prompt
@@ -133,5 +135,8 @@ void scheduler_age(){
 int increment_recursion(int depth){
     recursion_depth+=depth;
     return recursion_depth;
+}
+pcb* get_pcb(int pid){
+    return ready_queue_get_pcb(&queue,pid);
 }
 

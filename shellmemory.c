@@ -11,7 +11,8 @@ struct memory_struct {
 struct memory_struct shellmemory[MEM_SIZE];
 struct program_lines_struct{
     int size;
-    char lines[1000][100]; //program_lines has capacity of 1000 lines of 100 characters.
+    int occupied[333];
+    char lines[333][3][100]; //program_lines has capacity of 1000 lines of 100 characters.
 };
 struct program_lines_struct program_lines;
 int next_pid=1;// keep track of available and used pids
@@ -81,11 +82,20 @@ void program_lines_init(){
     memset(program_lines.lines, '\0', sizeof(program_lines.lines));
 }
 //Add new line to memory and augment current size
-void program_lines_append(char* line){
-    strcpy(program_lines.lines[program_lines.size],line); 
-    program_lines.size++;
-    
+int program_lines_append(char* lines[3]) {
+    for (int f = 0; f < 333; f++) {         
+        if (program_lines.occupied[f] == 0) {
+            for (int i = 0; i < 3; i++) {
+                strcpy(program_lines.lines[f][i], lines[i]);
+            }
+            program_lines.occupied[f] = 1;
+            program_lines.size++;
+            return f;                       
+        }
+    }
+    return -1;  // no free frame
 }
+
 //return next available line slot
 int program_lines_current(){
     return program_lines.size;

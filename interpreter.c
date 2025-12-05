@@ -213,7 +213,7 @@ int source(char *script) {
     fclose(p);
     pcb_init(script_pcb,length,startIndex); // build pcb with computed length and startindex
     scheduler_enqueue(script_pcb);
-    return errCode;
+    return script_pcb->pid;
  
 }
 
@@ -330,6 +330,7 @@ int run(char *command[]) {
     }
 
     int exec(char *files[],char *policy, int files_nb, int background) { 
+        int* pids = malloc(sizeof(int)* files_nb);
         int errCode=0;
         int isFirstCall=increment_recursion(1)==1; // Vanguard against recursive exec calls for initializing and running the scheduler
         if(isFirstCall){
@@ -340,12 +341,15 @@ int run(char *command[]) {
         for(int i=0;i<files_nb;i++){
             for(int j =0;j<i;j++){
                 if(strcmp(files[i],files[j])==0){
-                    printf("cannot execute 2 identical files");
-                    return 1;
+                    pcb *script_pcb = malloc(sizeof(pcb));
+                    pcb *clone = get_pcb(pids[j]);
+                    pcb_init(script_pcb,clone->length,clone->startIndex);
+                    scheduler_enqueue(script_pcb);
+                    
                 }
             }
          
-            errCode= source(files[i]); 
+            pids[i]= source(files[i]); 
         
             if(errCode!=0){
                 return errCode;

@@ -130,6 +130,16 @@ void ready_queue_age(ready_queue *queue){
        
 
     }
+} 
+
+pcb *ready_queue_get_pcb(ready_queue *queue,int pid){
+    pcb *temp = queue->head;
+    while(temp->next!=NULL){
+        if (temp->pid==pid)
+            return temp;
+        temp=temp->next;
+    }
+    return (pcb *) NULL;
 }
 
 

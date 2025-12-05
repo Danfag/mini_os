@@ -11,6 +11,8 @@ int scheduler_isEmpty();
 void scheduler_age();
 int increment_recursion();
 int decrement_recursion();
+pcb* get_pcb(int pid);
+
 #endif
 
 
