@@ -1,5 +1,11 @@
 
 #define MAX_USER_INPUT 1000
+#ifndef FRAMESIZE
+#define FRAMESIZE 33
+#endif
+#ifndef VARMEMSIZE
+#define VARMEMSIZE 33
+#endif
 int parseInput(char inp[]);
 #ifndef RQS
 #define RQS

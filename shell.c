@@ -15,7 +15,7 @@ int parseInput(char ui[]);
 // Start of everything
 int main(int argc, char *argv[]) {
     pids = malloc(sizeof(int));
-    printf("Shell version 1.4 created December 2024\n");
+    printf("Frame Store Size = %d; Variable Store Size = %d \n",FRAMESIZE,VARMEMSIZE);
 
     char prompt = '$'; // Shell prompt
     int terminal = isatty(0);   //isatty(0) returns true if fd 0(stdin) is the command line, false otherwise
@@ -108,6 +108,7 @@ int scheduler_run(int instructions){
     int starting_point= task->currentIndex; // start from last saved 'checkpoint'
     for(int i = starting_point;i<starting_point+instructions;i++){
         if(task->currentIndex>task->startIndex+task->length-1){
+            free(task->pagetable);
             free(task);// free task from memory upon termination
             break;
         }

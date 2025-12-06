@@ -3,17 +3,24 @@
 #include <stdio.h>
 #include "shellmemory.h"
 
+
+struct disk_struct{
+    int size;
+    char lines[1000][100]; //program_lines has capacity of 1000 lines of 100 characters.
+};
 struct memory_struct {
     char *var;
     char *value;
 };
 
-struct memory_struct shellmemory[MEM_SIZE];
+struct memory_struct shellmemory[VARMEMSIZE];
 struct program_lines_struct{
     int size;
-    int occupied[333];
-    char lines[333][3][100]; //program_lines has capacity of 1000 lines of 100 characters.
+    int occupied[FRAMESIZE];
+    char lines[FRAMESIZE][3][100]; //program_lines has capacity of 1000 lines of 100 characters.
 };
+
+struct disk_struct disk;
 struct program_lines_struct program_lines;
 int next_pid=1;// keep track of available and used pids
 
@@ -78,8 +85,11 @@ char *mem_get_value(char *var_in) {
 struct memory_struct shellmemory[MEM_SIZE];
 
 void program_lines_init(){
+    disk.size=0;
     program_lines.size=0;
     memset(program_lines.lines, '\0', sizeof(program_lines.lines));
+    memset(disk.lines, '\0', sizeof(disk.lines));
+
 }
 //Add new line to memory and augment current size
 int program_lines_append(char* lines[3]) {
@@ -95,10 +105,14 @@ int program_lines_append(char* lines[3]) {
     }
     return -1;  // no free frame
 }
+void disk_append(char *line){
+     strcpy(disk.lines[disk.size],line); 
+    disk.size++;
 
+}
 //return next available line slot
 int program_lines_current(){
-    return program_lines.size;
+    return disk.size;
 }
 int next_PID(){
     next_pid++;

@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=
+CFLAGS= -D FRAMESIZE=$(framesize) -D VARMEMSIZE=$(varmemsize)
 FMT=indent
 
 mysh: shell.c interpreter.c shellmemory.c readyqueue.c pcb.c

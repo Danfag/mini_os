@@ -193,8 +193,10 @@ int source(char *script) {
     int startIndex=program_lines_current(); //program_lines_current() returns the next free line in program_lines
     
    int* pagetable= malloc(sizeof(int)*33);
+   memset(pagetable,0,sizeof(pagetable));
    int currentPage=0;
     int length=0;
+    int page_nb=0;
     char page[3][MAX_USER_INPUT];
     int i=0;
        
@@ -203,6 +205,7 @@ int source(char *script) {
         memset(page[i], 0, sizeof(line));
 
         if (feof(p)) {
+            if(page_nb<2){
             if(i==1){
                 memset(page[1], 0, sizeof(line));
                 memset(page[2], 0, sizeof(line));
@@ -213,17 +216,19 @@ int source(char *script) {
                 memset(page[2], 0, sizeof(line));
                 pagetable[currentPage] = program_lines_append(page);
                 currentPage++;
-            }
+            }}
             break;
         }
         fgets(page[i], MAX_USER_INPUT - 1, p);
-        
+        disk_append(page[i]);
         length++;
+        if(page_nb<2){
         if (i>=2){
+            page_nb++;
             pagetable[currentPage] = program_lines_append(page);
-                currentPage++;
+            currentPage++;
         }
-        i=(i+1)%3;
+        i++;}
 
     }
 
