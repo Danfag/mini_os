@@ -9,5 +9,5 @@ int currentIndex;
 struct pcb *next;
 int* pagetable;
 } pcb;
-void pcb_init(pcb *script,int length,int startIndex, int *pagetable);
+void pcb_init(pcb *script,int length,int startIndex, int *pagetable,int pid);
 #endif

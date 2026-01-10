@@ -87,7 +87,7 @@ pcb *ready_queue_pop(ready_queue *queue, int instructions){
         queue->first=0;
     }
     pcb *temp = queue->head;
-    if(strcmp("FCFS",queue->policy)==0||strcmp("SJF",queue->policy)==0||temp->currentIndex+instructions-1>=temp->startIndex+temp->length-1){ //If Scheduler will run the pcb to termination, take out of the queue(certain for non-preemptive policies)
+    if(strcmp("FCFS",queue->policy)==0||strcmp("SJF",queue->policy)==0||(temp->currentIndex+instructions-1>=temp->startIndex+temp->length-1)){ //If Scheduler will run the pcb to termination, take out of the queue(certain for non-preemptive policies)
     queue->head=temp->next;
     temp->next=NULL;}
     else if(strcmp("RR",queue->policy)==0||strcmp("RR30",queue->policy)==0) { //Preemption for Round Robin.
@@ -131,10 +131,12 @@ void ready_queue_age(ready_queue *queue){
 
     }
 } 
-
+//get pcb by pid, useful for handling page faults aand duplicate processes
 pcb *ready_queue_get_pcb(ready_queue *queue,int pid){
     pcb *temp = queue->head;
-    while(temp->next!=NULL){
+    if (temp->pid==pid)
+            return temp;
+    while(temp!=NULL){
         if (temp->pid==pid)
             return temp;
         temp=temp->next;
